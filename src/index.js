@@ -24,6 +24,7 @@ root.render(
       color="orange"
       className={""}
       messages={["terrible", "bad", "okey", "good", "amazing"]}
+      onSetRating={() => {}}
     />
     <Test />
   </React.StrictMode>
