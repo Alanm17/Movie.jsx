@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const tempMovieData = [
   {
@@ -46,18 +46,14 @@ const tempWatchedData = [
     userRating: 9,
   },
 ];
-const KEY = '3df616eb'
+
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
-  const [query, setQuery] = useState("");
-  useEffect( async function() {
-    fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`).then((res) => res.json()).then(data => setMovies(data.Search))
-  },[query])
+  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
   return (
     <>
       <NavBAr>
-        <SearchBar query ={query} setQuery ={setQuery}/>
+        <SearchBar />
         <NumResults movies={movies} />
       </NavBAr>
       <Main>
@@ -88,8 +84,8 @@ function NavBAr({ children }) {
     </nav>
   );
 }
-function SearchBar({setQuery,query}) {
-  
+function SearchBar() {
+  const [query, setQuery] = useState("");
   return (
     <input
       className="search"
@@ -111,7 +107,7 @@ function Logo() {
 function NumResults({ movies }) {
   return (
     <p className="num-results">
-      Found <strong>{movies?.length || 0}</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 }
