@@ -50,12 +50,17 @@ body {
 }
 
 .box {
-  width: 42rem;
-  max-width: 42rem;
+  width: 48rem;
+  max-width: 48rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   overflow: scroll;
   position: relative;
+}
+.details {
+  text-align: center;
+  font-size: 9rem;
+  padding: 0.2rem;
 }
 
 .loader {
@@ -283,7 +288,8 @@ body {
 .rating {
   background-color: var(--color-background-100);
   border-radius: 0.9rem;
-  padding: 2rem 2.4rem;
+  padding: 2rem 0rem;
+  padding-right: 4rem;
   margin-bottom: 0.8rem;
   font-weight: 600;
   display: flex;
