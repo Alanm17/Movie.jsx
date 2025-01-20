@@ -212,6 +212,20 @@ body {
 .btn-delete:hover {
   background-color: var(--color-red-dark);
 }
+.btn-edit,
+.btn-save {
+  margin-left: 8px;
+  padding: 4px 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-save {
+  background-color: #28a745;
+}
 
 /* ******* */
 
