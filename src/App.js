@@ -15,6 +15,9 @@ export default function App() {
   function handleGoBack(id) {
     setSelectedID(null);
   }
+  function handleAddWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
   useEffect(
     function () {
       async function fetchtheAPI() {
@@ -66,7 +69,12 @@ export default function App() {
         </Box>
         <Box>
           {selectedID ? (
-            <MovieDetails selectedID={selectedID} handleGoBack={handleGoBack} />
+            <MovieDetails
+              selectedID={selectedID}
+              handleGoBack={handleGoBack}
+              onAddWatched={handleAddWatched}
+              watched={watched}
+            />
           ) : (
             <>
               <WatchedSummery watched={watched} />
@@ -136,9 +144,11 @@ function Box({ children }) {
     </div>
   );
 }
-function MovieDetails({ selectedID, handleGoBack }) {
+function MovieDetails({ selectedID, handleGoBack, onAddWatched, watched }) {
   const [movieS, setMovieS] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
   const {
     Title: title,
     Year: year,
@@ -151,6 +161,27 @@ function MovieDetails({ selectedID, handleGoBack }) {
     Genre: genre,
     Director: director,
   } = movieS;
+  function onHandleAdd() {
+    const newWatchedMovie = {
+      imdbID: selectedID,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime) === NaN ? 0 : Number(runtime.split(" ").at(0)),
+      userRating,
+    };
+    const isAlreadyWatched = watched.some(
+      (movie) => movie.imdbID === selectedID
+    );
+    if (isAlreadyWatched) {
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
+    } else {
+      onAddWatched(newWatchedMovie);
+      handleGoBack();
+    }
+  }
 
   console.log(title, year);
   useEffect(
@@ -195,7 +226,19 @@ function MovieDetails({ selectedID, handleGoBack }) {
           </header>
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={30} onSetRating={() => {}} />
+              <StarRating
+                maxRating={10}
+                size={28}
+                onSetRating={setUserRating}
+              />
+              {userRating > 0 && (
+                <button className={"btn-add"} onClick={onHandleAdd}>
+                  + Add to list
+                </button>
+              )}
+              {showAlert && (
+                <p className="alert">Movie is already in the list</p>
+              )}
             </div>
             <p>
               <em>{plot}</em>
@@ -232,32 +275,20 @@ function Movie({ movie, onHandleID }) {
     </li>
   );
 }
-// function WatchedBox() {
-//   const [watched, setWatched] = useState(tempWatchedData);
 
-//   const [isOpen2, setIsOpen2] = useState(true);
-
-//   return (
-//     <div className="box">
-//       <button
-//         className="btn-toggle"
-//         onClick={() => setIsOpen2((open) => !open)}
-//       >
-//         {isOpen2 ? "–" : "+"}
-//       </button>
-//       {isOpen2 && (
-//         <>
-//           <WatchedSummery watched={watched} />
-//           <WatchedMovieList watched={watched} />
-//         </>
-//       )}
-//     </div>
-//   );
-// }
 function WatchedSummery({ watched }) {
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+  const avgImdbRating = average(
+    watched
+      .map((movie) => movie.imdbRating)
+      .filter((rating) => !isNaN(rating) && rating > 0)
+  ).toFixed(1);
+
   const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
+  const avgRuntime = average(
+    watched
+      .map((movie) => movie.runtime)
+      .filter((runtime) => !isNaN(runtime) && runtime > 0)
+  );
   return (
     <div className="summary">
       <h2>Movies you watched</h2>
@@ -294,8 +325,8 @@ function WatchedMovieList({ watched }) {
 function MovieWatched({ movie }) {
   return (
     <li>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+      <img src={movie.poster} alt={`${movie.title} poster`} />
+      <h3>{movie.title}</h3>
       <div>
         <p>
           <span>⭐️</span>
