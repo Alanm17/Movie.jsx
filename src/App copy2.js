@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 const KEY = "3df616eb";
 export default function App() {
@@ -193,7 +193,6 @@ function MovieDetails({
     Genre: genre,
     Director: director,
   } = movieS;
-  const [avgRating, setAvgRating] = useState(0);
   function onHandleAdd() {
     const newWatchedMovie = {
       imdbID: selectedID,
@@ -207,8 +206,6 @@ function MovieDetails({
     const isAlreadyWatched = watched.some(
       (movie) => movie.imdbID === selectedID
     );
-    setAvgRating(Number(imdbRating));
-    setAvgRating(() => (avgRating + userRating) / 2);
     if (isAlreadyWatched) {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2000);
@@ -287,7 +284,7 @@ function MovieDetails({
                     justifyContent: "end",
                   }}
                 >
-                  Watched & AvgRating {avgRating}
+                  Watched
                 </p>
               ) : (
                 ""
