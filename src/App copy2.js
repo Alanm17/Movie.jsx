@@ -9,6 +9,7 @@ export default function App() {
   const [query, setQuery] = useState(
     localStorage.getItem("movieSearchQuery") || ""
   );
+  //asasasasa
   const [selectedID, setSelectedID] = useState(null);
   useEffect(() => {
     // Sync query with localStorage
