@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { NavBAr } from "./NavBAr";
@@ -10,10 +10,10 @@ import { MovieDetails } from "./MovieDetails";
 import { MovieList } from "./MovieList";
 import { WatchedSummery } from "./WatchedSummery";
 import { WatchedMovieList } from "./WatchedMovieList";
-export const KEY = "3df616eb";
+
 export default function App() {
   const [query, setQuery] = useState("");
-  const { movies, isLoading, error } = useMovies(query, handleGoBack);
+  const { movies, isLoading, error } = useMovies(query);
   const [watched, setWatched] = useLocalStorageState([], "watched");
 
   const [selectedID, setSelectedID] = useState(null);
@@ -24,9 +24,9 @@ export default function App() {
   function handleSelectedMovieID(id) {
     setSelectedID((selectedID) => (id === selectedID ? null : id));
   }
-  function handleGoBack(id) {
-    setSelectedID(null);
-  }
+  // function handleGoBack(id) {
+  //   setSelectedID(null);
+  // }
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
   }
@@ -54,10 +54,11 @@ export default function App() {
           {selectedID ? (
             <MovieDetails
               selectedID={selectedID}
-              handleGoBack={handleGoBack}
+              // handleGoBack={handleGoBack}
               onAddWatched={handleAddWatched}
               watched={watched}
               setWatched={setWatched}
+              setSelectedID={setSelectedID}
             />
           ) : (
             <>

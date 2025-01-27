@@ -6,6 +6,8 @@ export function useMovies(query, handleGoBack) {
   const [movies, setMovies] = useState([]);
   useEffect(
     function () {
+      const proxyURl = "https://cors-anywhere.herokuapp.com/";
+      const apiURl = `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`;
       const controller = new AbortController();
       async function fetchtheAPI() {
         try {
@@ -17,10 +19,9 @@ export function useMovies(query, handleGoBack) {
           }
           setIsLoading(true);
           setError("");
-          const res = await fetch(
-            `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
+          const res = await fetch(apiURl, {
+            signal: controller.signal,
+          });
           if (!res.ok)
             throw new Error("something went wrong with fetching movies");
           const data = await res.json();
@@ -39,7 +40,7 @@ export function useMovies(query, handleGoBack) {
           setIsLoading(false);
         }
       }
-      handleGoBack();
+
       fetchtheAPI();
 
       return function () {
