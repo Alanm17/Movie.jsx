@@ -183,7 +183,7 @@ body {
   max-width: 48rem;
   background: var(--color-background-500);
   border-radius: 1.2rem;
-  overflow: hidden;
+  overflow: auto;
   position: relative;
   transition: transform 0.3s;
   margin-bottom: 3rem;

@@ -42,7 +42,6 @@ export function MovieDetails({
   // Fetch movie details from OMDB
   useEffect(() => {
     const controller = new AbortController();
-
     const fetchMovieDetails = async () => {
       setIsLoading(true); // ✅ Add this line
       try {
@@ -62,6 +61,7 @@ export function MovieDetails({
     };
 
     fetchMovieDetails();
+    return () => controller.abort();
   }, [selectedID]);
 
   // Fetch YouTube trailer
