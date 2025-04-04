@@ -1,29 +1,37 @@
+const CACHE = {};
+
 exports.handler = async (event) => {
-  const { query } = event.queryStringParameters;
+  const { movieId } = event.queryStringParameters;
   const OMDb_API_KEY = process.env.OMDb_API_KEY;
 
-  if (!movieId) {
+  // 1. Check cache first
+  if (CACHE[movieId]) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Missing movieId parameter" }),
+      statusCode: 200,
+      body: JSON.stringify(CACHE[movieId]),
+      headers: { "Content-Type": "application/json" },
     };
   }
 
+  // 2. Fetch from OMDB if not cached
   try {
-    const url = `http://www.omdbapi.com/?apikey=${OMDb_API_KEY}&i=${qu}`;
+    const url = `https://www.omdbapi.com/?apikey=${OMDb_API_KEY}&i=${movieId}`;
     const res = await fetch(url);
     const data = await res.json();
 
-    if (data.Response === "False") {
+    // 3. Cache successful responses
+    if (data.Response === "True") {
+      CACHE[movieId] = data;
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: data.Error || "Movie not found" }),
+        statusCode: 200,
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
       };
     }
 
     return {
-      statusCode: 200,
-      body: JSON.stringify(data), // Return the full movie object
+      statusCode: 404,
+      body: JSON.stringify({ error: data.Error || "Not found" }),
     };
   } catch (err) {
     return {

@@ -42,25 +42,34 @@ export function MovieDetails({
   // Fetch movie details from OMDB
   useEffect(() => {
     const controller = new AbortController();
-    const fetchMovieDetails = async () => {
-      setIsLoading(true); // ✅ Add this line
+
+    const fetchData = async () => {
+      setIsLoading(true);
+
       try {
-        const response = await fetch(
-          `https://www.omdbapi.com/?i=${selectedID}&apikey=3df616eb`
+        // Will use relative path in production, absolute in dev
+        const baseUrl =
+          process.env.NODE_ENV === "development" ? "http://localhost:8888" : "";
+
+        const res = await fetch(
+          `${baseUrl}/.netlify/functions/fetchMovieDetails?movieId=${selectedID}`,
+          {
+            signal: controller.signal,
+          }
         );
-        if (!response.ok) {
-          throw new Error("Movie not found");
-        }
-        const data = await response.json();
+
+        const data = await res.json();
         setMovie(data);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        if (!err.name === "AbortError") {
+          setError(err.message);
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchMovieDetails();
+    fetchData();
     return () => controller.abort();
   }, [selectedID]);
 
