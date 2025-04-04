@@ -1,53 +1,54 @@
 import { useState, useEffect } from "react";
-const KEY = "3df616eb";
-export function useMovies(query, handleGoBack) {
-  const [isLoading, setIsLoading] = useState(true);
+
+export function useMovies(query) {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [movies, setMovies] = useState([]);
-  useEffect(
-    function () {
-      const proxyURl = "https://cors-anywhere.herokuapp.com/";
-      const apiURl = `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`;
-      const controller = new AbortController();
-      async function fetchtheAPI() {
-        try {
-          if (query.length < 3) {
-            // Skip API call if query is empty
-            setMovies([]);
-            setError("");
-            return;
-          }
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(apiURl, {
-            signal: controller.signal,
-          });
-          if (!res.ok)
-            throw new Error("something went wrong with fetching movies");
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found!");
-          setMovies(data.Search || []);
-          console.log(data.Search);
-          setError("");
-        } catch (err) {
-          console.error(err.message);
-          if (err.name !== "AbortError") {
-            setError(err.message);
-          }
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchMovies() {
+      try {
+        if (query.length < 3) {
           setMovies([]);
-        } finally {
-          setIsLoading(false);
+          setError("");
+          return;
         }
+
+        setIsLoading(true);
+        setError("");
+
+        const res = await fetch(
+          `/.netlify/functions/fetchMovies?query=${query}`,
+          {
+            signal: controller.signal,
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch movies");
+
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setMovies(data);
+        } else {
+          throw new Error(data.error || "No movies found");
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+          setMovies([]);
+        }
+      } finally {
+        setIsLoading(false);
       }
+    }
 
-      fetchtheAPI();
+    fetchMovies();
 
-      return function () {
-        controller.abort();
-      };
-    },
-    [query]
-  );
+    return () => controller.abort();
+  }, [query]);
+
   return { movies, isLoading, error };
 }

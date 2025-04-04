@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"  # Runs `react-scripts build`
+  publish = "build"         # Netlify deploys the `build` folder (React's output)
+  functions = "netlify/functions"  # Points to your serverless functions
+
+# Optional: Redirects/headers for SPAs (like React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
