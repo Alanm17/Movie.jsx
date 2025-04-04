@@ -1,5 +1,5 @@
 exports.handler = async (event) => {
-  const { movieId } = event.queryStringParameters;
+  const { query } = event.queryStringParameters;
   const OMDb_API_KEY = process.env.OMDb_API_KEY;
 
   if (!movieId) {
@@ -10,7 +10,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const url = `http://www.omdbapi.com/?apikey=${OMDb_API_KEY}&i=${movieId}`;
+    const url = `http://www.omdbapi.com/?apikey=${OMDb_API_KEY}&i=${qu}`;
     const res = await fetch(url);
     const data = await res.json();
 

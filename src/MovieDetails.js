@@ -3,7 +3,7 @@ import { Loader } from "./App";
 import StarRating from "./StarRating";
 import { useKey } from "./useKey";
 import ReactPlayer from "react-player";
-
+import "./index.css";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
 export function MovieDetails({
@@ -44,6 +44,7 @@ export function MovieDetails({
     const controller = new AbortController();
 
     const fetchMovieDetails = async () => {
+      setIsLoading(true); // ✅ Add this line
       try {
         const response = await fetch(
           `https://www.omdbapi.com/?i=${selectedID}&apikey=3df616eb`
