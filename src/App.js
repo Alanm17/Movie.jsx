@@ -10,6 +10,7 @@ import { MovieDetails } from "./MovieDetails";
 import { MovieList } from "./MovieList";
 import { WatchedSummery } from "./WatchedSummery";
 import { WatchedMovieList } from "./WatchedMovieList";
+import Footer from "./Footer";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -71,6 +72,7 @@ export default function App() {
           )}
         </Box>
       </Main>
+      <Footer />
     </>
   );
 }
