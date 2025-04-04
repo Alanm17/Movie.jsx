@@ -38,41 +38,29 @@ export function MovieDetails({
     Genre: genre,
     Director: director,
   } = movie;
-
+  console.log(`Title: ${title}, Year: ${year}`);
   // Fetch movie details from OMDB
   useEffect(() => {
     const controller = new AbortController();
 
-    async function fetchMovieDetails() {
-      setIsLoading(true);
-      setError(null);
+    const fetchMovieDetails = async () => {
       try {
-        const res = await fetch(
-          `/.netlify/functions/function?id=${selectedID}`,
-          {
-            signal: controller.signal,
-          }
+        const response = await fetch(
+          `https://www.omdbapi.com/?i=${selectedID}&apikey=3df616eb`
         );
-
-        if (!res.ok) throw new Error("Failed to fetch movie details");
-
-        const data = await res.json();
-        if (data.Error) throw new Error(data.Error);
-
-        setMovie(data);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          setError(err.message);
-          console.error("Error:", err);
+        if (!response.ok) {
+          throw new Error("Movie not found");
         }
+        const data = await response.json();
+        setMovie(data);
+      } catch (error) {
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
-    if (selectedID) fetchMovieDetails();
-
-    return () => controller.abort();
+    fetchMovieDetails();
   }, [selectedID]);
 
   // Fetch YouTube trailer

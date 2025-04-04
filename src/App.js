@@ -25,6 +25,7 @@ export default function App() {
   function handleSelectedMovieID(id) {
     setSelectedID((selectedID) => (id === selectedID ? null : id));
   }
+  console.log(selectedID);
   // function handleGoBack(id) {
   //   setSelectedID(null);
   // }
