@@ -4,12 +4,18 @@ exports.handler = async (event) => {
   const { movieId } = event.queryStringParameters;
   const OMDb_API_KEY = process.env.OMDb_API_KEY;
 
+  const headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
   // 1. Check cache first
   if (CACHE[movieId]) {
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify(CACHE[movieId]),
-      headers: { "Content-Type": "application/json" },
     };
   }
 
@@ -24,18 +30,20 @@ exports.handler = async (event) => {
       CACHE[movieId] = data;
       return {
         statusCode: 200,
+        headers,
         body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" },
       };
     }
 
     return {
       statusCode: 404,
+      headers,
       body: JSON.stringify({ error: data.Error || "Not found" }),
     };
   } catch (err) {
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: err.message }),
     };
   }

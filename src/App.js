@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useMovies } from "./useMovies";
+import { useEffect, useRef, useState } from "react";
 import { useLocalStorageState } from "./useLocalStorageState";
 import { NavBAr } from "./NavBAr";
 import { SearchBar } from "./SearchBar";
@@ -10,14 +9,23 @@ import { MovieDetails } from "./MovieDetails";
 import { MovieList } from "./MovieList";
 import { WatchedSummery } from "./WatchedSummery";
 import { WatchedMovieList } from "./WatchedMovieList";
+import { useMovies } from "./useMovies";
+
 import Footer from "./Footer";
+import TrailerModel from "./TrailerModel";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const { movies, isLoading, error } = useMovies(query);
   const [watched, setWatched] = useLocalStorageState([], "watched");
-
+  const [error, setError] = useState(null);
+  const [movie, setMovie] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
+  const { movies } = useMovies(query);
+  const [userRating, setUserRating] = useState(
+    watched.find((movie) => movie.imdbID === selectedID)?.userRating || null
+  );
+  const countRef = useRef(0);
   useEffect(() => {
     // Sync query with localStorage
     localStorage.setItem("movieSearchQuery", query);
@@ -25,7 +33,51 @@ export default function App() {
   function handleSelectedMovieID(id) {
     setSelectedID((selectedID) => (id === selectedID ? null : id));
   }
-  console.log(selectedID);
+  useEffect(() => {
+    if (userRating) countRef.current++;
+  }, [userRating]);
+
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Genre: genre,
+    Director: director,
+  } = movie;
+
+  // Fetch movie details from OMDB
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(
+          `/.netlify/functions/fetchMovieDetails?movieId=${selectedID}`,
+          {
+            signal: controller.signal,
+          }
+        );
+
+        const data = await res.json();
+        setMovie(data);
+      } catch (err) {
+        if (!err.name === "AbortError") {
+          setError(err.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    return () => controller.abort();
+  }, [selectedID]);
   // function handleGoBack(id) {
   //   setSelectedID(null);
   // }
@@ -54,14 +106,33 @@ export default function App() {
         </Box>
         <Box>
           {selectedID ? (
-            <MovieDetails
-              selectedID={selectedID}
-              // handleGoBack={handleGoBack}
-              onAddWatched={handleAddWatched}
-              watched={watched}
-              setWatched={setWatched}
-              setSelectedID={setSelectedID}
-            />
+            <>
+              <MovieDetails
+                selectedID={selectedID}
+                onAddWatched={handleAddWatched}
+                watched={watched}
+                setWatched={setWatched}
+                setSelectedID={setSelectedID}
+                title={title}
+                year={year}
+                poster={poster}
+                runtime={runtime}
+                imdbRating={imdbRating}
+                plot={plot}
+                released={released}
+                actors={actors}
+                genre={genre}
+                director={director}
+                userRating={userRating}
+                setUserRating={setUserRating}
+                countRef={countRef}
+                error={error}
+                setError={setError}
+
+                // optional, for trailer
+              />
+              {!isLoading && title && <TrailerModel movieTitle={title} />}
+            </>
           ) : (
             <>
               <WatchedSummery watched={watched} />

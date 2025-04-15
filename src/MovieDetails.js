@@ -1,77 +1,36 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Loader } from "./App";
 import StarRating from "./StarRating";
 import { useKey } from "./useKey";
-import ReactPlayer from "react-player";
+// import ReactPlayer from "react-player";
 import "./index.css";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
 export function MovieDetails({
+  setUserRating,
+  userRating,
+  error,
+  setError,
+  countRef,
   selectedID,
   onAddWatched,
   watched,
   setSelectedID,
+  title,
+  year,
+  poster,
+  runtime,
+  imdbRating,
+  plot,
+  released,
+  actors,
+  genre,
+  director,
 }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [userRating, setUserRating] = useState(
-    watched.find((movie) => movie.imdbID === selectedID)?.userRating || null
-  );
-  const [showTrailer, setShowTrailer] = useState(false);
-  const [youtubeId, setYoutubeId] = useState(null);
-  const [error, setError] = useState(null);
-  const countRef = useRef(0);
 
-  useEffect(() => {
-    if (userRating) countRef.current++;
-  }, [userRating]);
-
-  const {
-    Title: title,
-    Year: year,
-    Poster: poster,
-    Runtime: runtime,
-    imdbRating,
-    Plot: plot,
-    Released: released,
-    Actors: actors,
-    Genre: genre,
-    Director: director,
-  } = movie;
-  console.log(`Title: ${title}, Year: ${year}`);
-  // Fetch movie details from OMDB
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      try {
-        // Will use relative path in production, absolute in dev
-        const baseUrl =
-          process.env.NODE_ENV === "development" ? "http://localhost:8888" : "";
-
-        const res = await fetch(
-          `${baseUrl}/.netlify/functions/fetchMovieDetails?movieId=${selectedID}`,
-          {
-            signal: controller.signal,
-          }
-        );
-
-        const data = await res.json();
-        setMovie(data);
-      } catch (err) {
-        if (!err.name === "AbortError") {
-          setError(err.message);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-    return () => controller.abort();
-  }, [selectedID]);
+  // const [youtubeId, setYoutubeId] = useState(null);
 
   // Fetch YouTube trailer
   useEffect(() => {
@@ -79,7 +38,6 @@ export function MovieDetails({
 
     async function fetchTrailer() {
       if (!title) return;
-
       try {
         const response = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
@@ -89,9 +47,6 @@ export function MovieDetails({
         );
 
         if (!response.ok) throw new Error("Failed to fetch trailer");
-
-        const data = await response.json();
-        setYoutubeId(data.items?.[0]?.id?.videoId || null);
       } catch (err) {
         if (err.name !== "AbortError") {
           console.error("Trailer error:", err);
@@ -179,16 +134,6 @@ export function MovieDetails({
                 {imdbRating} IMDb rating
               </p>
 
-              {youtubeId && (
-                <button
-                  className="btn-trailer"
-                  onClick={() => setShowTrailer(true)}
-                  aria-label="Play trailer"
-                >
-                  ▶ Play Trailer
-                </button>
-              )}
-
               {isSaved && (
                 <p className="watched-badge">
                   Watched • Avg Rating:{" "}
@@ -232,34 +177,6 @@ export function MovieDetails({
             <p>Starring {actors}</p>
             <p>Directed by {director}</p>
           </section>
-
-          {showTrailer && youtubeId && (
-            <div className="trailer-modal">
-              <div className="trailer-container">
-                <button
-                  className="btn-close-trailer"
-                  onClick={() => setShowTrailer(false)}
-                  aria-label="Close trailer"
-                >
-                  ✕
-                </button>
-                <ReactPlayer
-                  url={`https://www.youtube.com/watch?v=${youtubeId}`}
-                  controls
-                  width="100%"
-                  height="100%"
-                  config={{
-                    youtube: {
-                      playerVars: {
-                        modestbranding: 1,
-                        rel: 0,
-                      },
-                    },
-                  }}
-                />
-              </div>
-            </div>
-          )}
         </>
       )}
     </div>
