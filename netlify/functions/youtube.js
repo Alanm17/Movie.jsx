@@ -1,9 +1,10 @@
 const axios = require("axios");
-
+require("dotenv").config();
 exports.handler = async (event) => {
   const query = event.queryStringParameters?.query;
-  const YT_API_KEY = process.env.YOUTUBE_API_KEY; // Comes from Netlify env vars
-  // const YT_API_KEY = "AIzaSyDU_KWmB1ALUP7wCG8NRHlVdyUTWI6Yf-Q";
+
+  const YT_API_KEY = "AIzaSyDU_KWmB1ALUP7wCG8NRHlVdyUTWI6Yf-Q";
+
   const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -30,7 +31,7 @@ exports.handler = async (event) => {
           type: "video",
           safeSearch: "strict",
         },
-        // timeout: 5000,
+        timeout: 5000,
       }
     );
 
