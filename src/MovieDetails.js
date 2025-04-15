@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Loader } from "./App";
 import StarRating from "./StarRating";
 import { useKey } from "./useKey";
@@ -7,6 +7,7 @@ import "./index.css";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
 export function MovieDetails({
+  isLoading,
   setUserRating,
   userRating,
   error,
@@ -27,9 +28,6 @@ export function MovieDetails({
   genre,
   director,
 }) {
-  const [movie, setMovie] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-
   // const [youtubeId, setYoutubeId] = useState(null);
 
   // Fetch YouTube trailer

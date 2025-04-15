@@ -128,6 +128,8 @@ export default function App() {
                 countRef={countRef}
                 error={error}
                 setError={setError}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
 
                 // optional, for trailer
               />
