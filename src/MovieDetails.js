@@ -4,6 +4,7 @@ import StarRating from "./StarRating";
 import { useKey } from "./useKey";
 // import ReactPlayer from "react-player";
 import "./index.css";
+import Trailer from "./TrailerModel";
 const YOUTUBE_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
 export function MovieDetails({
@@ -109,17 +110,20 @@ export function MovieDetails({
       ) : (
         <>
           <header>
+            {!isLoading ? (
+              title && <Trailer movieTitle={title} />
+            ) : (
+              <img
+                src={poster !== "N/A" ? poster : "/placeholder-movie.jpg"}
+                alt={`Poster of ${title}`}
+                onError={(e) => {
+                  e.target.src = "/placeholder-movie.jpg";
+                }}
+              />
+            )}
             <button className="btn-back" onClick={handleGoBack}>
               &larr;
             </button>
-
-            <img
-              src={poster !== "N/A" ? poster : "/placeholder-movie.jpg"}
-              alt={`Poster of ${title}`}
-              onError={(e) => {
-                e.target.src = "/placeholder-movie.jpg";
-              }}
-            />
 
             <div className="details-overview">
               <h2>{title}</h2>

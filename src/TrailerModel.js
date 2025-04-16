@@ -112,7 +112,7 @@ function Trailer({ movieTitle, onClose }) {
           <ReactPlayer
             url={`https://www.youtube.com/watch?v=${trailerState.youtubeId}`}
             controls
-            playing={true}
+            playing={false}
             width="100%"
             height="100%" // This makes the player fill its parent container
             config={{

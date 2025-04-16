@@ -1,9 +1,7 @@
 const axios = require("axios");
-require("dotenv").config();
 exports.handler = async (event) => {
   const query = event.queryStringParameters?.query;
-
-  const YT_API_KEY = "AIzaSyDU_KWmB1ALUP7wCG8NRHlVdyUTWI6Yf-Q";
+  const YT_API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
   const headers = {
     "Content-Type": "application/json",

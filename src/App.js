@@ -133,7 +133,7 @@ export default function App() {
 
                 // optional, for trailer
               />
-              {!isLoading && title && <TrailerModel movieTitle={title} />}
+              
             </>
           ) : (
             <>
