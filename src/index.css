@@ -56,7 +56,8 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
 }
 .rating {
-  margin: 1rem 0;
+  margin-left: 1rem;
+  /* margin: 1rem 0; */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   border: #0a0a10;
 }
@@ -67,7 +68,9 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   margin-bottom: 2rem;
 }
-
+header {
+  margin: 1rem;
+}
 .summary h2 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
@@ -75,7 +78,9 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-
+p {
+  margin: 1rem;
+}
 .summary div {
   display: flex;
   align-items: center;
@@ -331,12 +336,6 @@ body {
 .details {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 2rem 1rem;
-  background-color: #0b0b15;
-  color: white;
-  min-height: 100vh;
-  gap: 1.5rem;
 }
 
 .details header {
@@ -347,20 +346,12 @@ body {
   margin-bottom: 2rem;
 }
 
-.details img {
-  width: 100%;
-  max-width: 20rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  margin-bottom: 2rem;
-}
-
 .details-overview {
   width: 100%;
-  padding: 2.4rem;
+  padding: 2rem;
   background: var(--color-background-100);
   border-radius: 1rem;
-  margin-top: -3rem;
+  margin-top: 5rem;
   position: relative;
   z-index: 1;
 }
@@ -489,18 +480,6 @@ body {
     gap: 10px;
   }
 }
-.trailer-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: flex-start; /* Align content to the top */
-  align-items: flex-start; /* Align content to the top */
-  padding-top: 20px; /* Add some padding to the top */
-}
 
 .trailer-player-container {
   position: relative;
@@ -513,7 +492,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 120%;
 }
 
 .close-trailer-button {
@@ -526,40 +505,4 @@ body {
   font-size: 30px;
   cursor: pointer;
   z-index: 10;
-}
-.details-overview {
-  top: 20rem;
-  padding: 15px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.details-overview h2 {
-  top: 40rem;
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.details-overview p {
-  font-size: 1rem;
-  color: #666;
-  margin: 5px 0;
-}
-
-.details-overview .watched-badge {
-  font-size: 1.2rem;
-  color: #4caf50;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.details-overview .watched-badge span {
-  font-size: 1.4rem;
-  margin-right: 5px;
 }

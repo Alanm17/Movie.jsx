@@ -108,19 +108,16 @@ export function MovieDetails({
       ) : error ? (
         <div className="error-message">{error}</div>
       ) : (
-        <>
-          <header>
+        <div>
+          <div>
+            {" "}
             {!isLoading ? (
               title && <Trailer movieTitle={title} />
             ) : (
-              <img
-                src={poster !== "N/A" ? poster : "/placeholder-movie.jpg"}
-                alt={`Poster of ${title}`}
-                onError={(e) => {
-                  e.target.src = "/placeholder-movie.jpg";
-                }}
-              />
-            )}
+              <Loader />
+            )}{" "}
+          </div>
+          <header>
             <button className="btn-back" onClick={handleGoBack}>
               &larr;
             </button>
@@ -160,7 +157,7 @@ export function MovieDetails({
                 initialRating={userRating}
               />
 
-              {userRating > 0 && (
+              {userRating && (
                 <button
                   className="btn-add"
                   onClick={handleAddToWatched}
@@ -179,7 +176,7 @@ export function MovieDetails({
             <p>Starring {actors}</p>
             <p>Directed by {director}</p>
           </section>
-        </>
+        </div>
       )}
     </div>
   );
