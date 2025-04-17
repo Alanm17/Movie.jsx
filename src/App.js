@@ -10,9 +10,7 @@ import { MovieList } from "./MovieList";
 import { WatchedSummery } from "./WatchedSummery";
 import { WatchedMovieList } from "./WatchedMovieList";
 import { useMovies } from "./useMovies";
-
 import Footer from "./Footer";
-import TrailerModel from "./TrailerModel";
 
 export default function App() {
   const [query, setQuery] = useState("");
