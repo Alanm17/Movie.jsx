@@ -1,6 +1,6 @@
 # 🎬 Cineera - Movie Explorer App
 
-A modern React-based movie discovery and rating application. This project allows users to search, explore, and rate movies, track watched content, and enjoy educational video content — all deployed seamlessly using Netlify with support for serverless functions.
+A modern React-based movie discovery and rating application. This project allows users to search, explore, and rate movies, track watched content, and enjoy educational video content all deployed seamlessly using Netlify with support for serverless functions.
 
 ## 🌐 Live Demo
 
