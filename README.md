@@ -1,4 +1,4 @@
-# 🎬 Movie Explorer App
+# 🎬 Cineera - Movie Explorer App
 
 A modern React-based movie discovery and rating application. This project allows users to search, explore, and rate movies, track watched content, and enjoy educational video content — all deployed seamlessly using Netlify with support for serverless functions.
 
@@ -33,8 +33,7 @@ Hosted on Netlify — [Click to Visit](https://cineera.netlify.app/)
 1. **Clone the Repo**
 
 ```bash
-git clone https://github.com/your-username/movie-explorer.git
-cd movie-explorer
+git clone https://github.com/Alanm17/Movie.jsx.git
 npm install
 npm start
 REACT_APP_YOUTUBE_API_KEY=your_api_key_here
