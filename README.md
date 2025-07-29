@@ -4,7 +4,7 @@ A modern React-based movie discovery and rating application. This project allows
 
 ## 🌐 Live Demo
 
-Hosted on Netlify — [Click to Visit](#) *(replace with your actual Netlify URL)*
+Hosted on Netlify — [Click to Visit](https://cineera.netlify.app/) 
 
 ---
 
