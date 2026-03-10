@@ -26,6 +26,24 @@ export default function App() {
   );
   const countRef = useRef(0);
 
+  // Background slider state
+  const backgrounds = [
+    "/backgrounds/marvel.jpg",
+    "/backgrounds/lotr.jpg",
+    "/backgrounds/got.jpg",
+    "/backgrounds/witcher.jpg",
+    "/backgrounds/vikings.jpg"
+  ];
+  const [bgIndex, setBgIndex] = useState(0);
+
+  // Rotate backgrounds every 10 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [backgrounds.length]);
+
   useEffect(() => {
     localStorage.setItem("movieSearchQuery", query);
   }, [query]);
@@ -90,6 +108,17 @@ export default function App() {
 
   return (
     <>
+      {/* Immersive Rotating Movie Backgrounds */}
+      <div className="movie-background-container" aria-hidden="true">
+        {backgrounds.map((bg, idx) => (
+          <div
+            key={bg}
+            className={`movie-background ${idx === bgIndex ? "visible" : ""}`}
+            style={{ backgroundImage: `url(${bg})` }}
+          />
+        ))}
+      </div>
+
       {/* Animated background particles */}
       <div className="bg-particles" aria-hidden="true">
         {[...Array(20)].map((_, i) => (
