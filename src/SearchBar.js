@@ -9,13 +9,15 @@ export function SearchBar({ setQuery, query }) {
     setQuery("");
   });
   return (
-    <input
-      className="search"
-      type="text"
-      placeholder="Search movies..."
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      ref={inputEl}
-    />
+    <div className="search-wrapper">
+      <input
+        className="search"
+        type="text"
+        placeholder="Search movies..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        ref={inputEl}
+      />
+    </div>
   );
 }

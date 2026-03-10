@@ -11,6 +11,7 @@ import { WatchedSummery } from "./WatchedSummery";
 import { WatchedMovieList } from "./WatchedMovieList";
 import { useMovies } from "./useMovies";
 import Footer from "./Footer";
+import { RecommendedMovies } from "./RecommendedMovies";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -24,13 +25,15 @@ export default function App() {
     watched.find((movie) => movie.imdbID === selectedID)?.userRating || null
   );
   const countRef = useRef(0);
+
   useEffect(() => {
-    // Sync query with localStorage
     localStorage.setItem("movieSearchQuery", query);
   }, [query]);
+
   function handleSelectedMovieID(id) {
     setSelectedID((selectedID) => (id === selectedID ? null : id));
   }
+
   useEffect(() => {
     if (userRating) countRef.current++;
   }, [userRating]);
@@ -53,15 +56,13 @@ export default function App() {
     const controller = new AbortController();
 
     const fetchData = async () => {
+      if (!selectedID) return;
       setIsLoading(true);
       try {
         const res = await fetch(
           `/.netlify/functions/fetchMovieDetails?movieId=${selectedID}`,
-          {
-            signal: controller.signal,
-          }
+          { signal: controller.signal }
         );
-
         const data = await res.json();
         setMovie(data);
       } catch (err) {
@@ -76,29 +77,47 @@ export default function App() {
     fetchData();
     return () => controller.abort();
   }, [selectedID]);
-  // function handleGoBack(id) {
-  //   setSelectedID(null);
-  // }
+
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
   }
+
   function onHandleRemove(id) {
     setWatched(watched.filter((movie) => movie.imdbID !== id));
   }
 
+  const isSearching = query.length >= 3;
+
   return (
     <>
+      {/* Animated background particles */}
+      <div className="bg-particles" aria-hidden="true">
+        {[...Array(20)].map((_, i) => (
+          <span key={i} className="particle" style={{ "--i": i }} />
+        ))}
+      </div>
+
       <NavBAr>
         <SearchBar query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBAr>
+
+      {/* Recommended section: shown when not searching */}
+      {!isSearching && !selectedID && (
+        <RecommendedMovies onHandleID={handleSelectedMovieID} />
+      )}
+
       <Main>
-        {" "}
-        <MovieList />
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && (
+          {!isLoading && !error && isSearching && (
             <MovieList movies={movies} onHandleID={handleSelectedMovieID} />
+          )}
+          {!isSearching && !isLoading && (
+            <div className="empty-search-hint">
+              <span>🎬</span>
+              <p>Search for any movie above</p>
+            </div>
           )}
           {error && <Error message={error} />}
         </Box>
@@ -128,10 +147,7 @@ export default function App() {
                 setError={setError}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-
-                // optional, for trailer
               />
-              
             </>
           ) : (
             <>
@@ -148,11 +164,14 @@ export default function App() {
     </>
   );
 }
+
 export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
 export function Loader() {
   return <p className="loader">Loading...</p>;
 }
+
 function Error({ message }) {
-  return <p className="error">📛{message}</p>;
+  return <p className="error">📛 {message}</p>;
 }
