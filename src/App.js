@@ -28,11 +28,10 @@ export default function App() {
 
   // Background slider state
   const backgrounds = [
-    "/backgrounds/marvel.jpg",
-    "/backgrounds/lotr.jpg",
-    "/backgrounds/got.jpg",
-    "/backgrounds/witcher.jpg",
-    "/backgrounds/vikings.jpg"
+    "/backgrounds/image_1.png",
+    "/backgrounds/image_2.png",
+    "/backgrounds/image_3.png",
+    "/backgrounds/image_4.png"
   ];
   const [bgIndex, setBgIndex] = useState(0);
 
